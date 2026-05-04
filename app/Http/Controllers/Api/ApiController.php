@@ -14,4 +14,11 @@ use OpenApi\Attributes as OA;
     url: '/api/v1',
     description: 'API V1'
 )]
+#[OA\SecurityScheme(
+    securityScheme: 'sanctum',
+    type: 'http',
+    scheme: 'bearer',
+    bearerFormat: 'Token',
+    description: 'Enter the token from the login endpoint'
+)]
 class ApiController extends Controller {}
