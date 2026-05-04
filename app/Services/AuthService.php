@@ -13,20 +13,19 @@ class AuthService
      */
     public function __construct(
         private readonly AuthRepositoryInterface $authRepository,
-    )
-    {}
+    ) {}
 
-    public function login(string $email, string $password):array
+    public function login(string $email, string $password): array
     {
         $user = $this->authRepository->findByEmail($email);
-        if(!$user){
+        if (! $user) {
             throw ValidationException::withMessages([
-                'email'=>[__('auth.failed')]
+                'email' => [__('auth.failed')],
             ]);
         }
-        if(!Hash::check($password, $user->password)){
+        if (! Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([
-                'password'=>[__('auth.failed')]
+                'password' => [__('auth.failed')],
             ]);
         }
 
@@ -38,5 +37,4 @@ class AuthService
         ];
 
     }
-
 }

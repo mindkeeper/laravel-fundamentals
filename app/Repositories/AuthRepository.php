@@ -12,14 +12,13 @@ class AuthRepository implements AuthRepositoryInterface
         return User::where('email', $email)->first();
     }
 
-
-    public function createToken(User $user, string $tokenName = 'api-token'):string
+    public function createToken(User $user, string $tokenName = 'api-token'): string
     {
         return $user->createToken($tokenName)->plainTextToken;
     }
 
-    public function revokeToken(User $user):void
+    public function revokeToken(User $user): void
     {
-         $user->tokens()->delete();
+        $user->tokens()->delete();
     }
 }
