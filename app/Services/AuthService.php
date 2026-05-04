@@ -3,10 +3,11 @@
 namespace App\Services;
 
 use App\Repositories\Interfaces\AuthRepositoryInterface;
+use App\Services\Interfaces\AuthServiceInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class AuthService
+class AuthService implements AuthServiceInterface
 {
     /**
      * Create a new class instance.
