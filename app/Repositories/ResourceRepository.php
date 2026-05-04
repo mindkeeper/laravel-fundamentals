@@ -25,9 +25,9 @@ class ResourceRepository implements ResourceRepositoryInterface
         return $resource;
     }
 
-    public function destroyById(int $id): void
+    public function destroy(Resource $resource): void
     {
-        Resource::findOrFail($id)->delete();
+        $resource->delete();
     }
 
     public function create(Resource $resource): void

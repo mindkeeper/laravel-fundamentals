@@ -13,8 +13,9 @@ class UpdateResourceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $resource = Resource::find($this->route('resource'));
-        return $resource && $this->user()->id === $resource->user_id;
+        $resource = $this->route('resource');
+
+        return $resource instanceof Resource && $this->user()->id === $resource->user_id;
     }
 
     /**
@@ -25,8 +26,8 @@ class UpdateResourceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title'=>['sometimes','string'],
-            'description'=>['sometimes','string']
+            'title' => ['sometimes', 'string'],
+            'description' => ['sometimes', 'string'],
         ];
     }
 }

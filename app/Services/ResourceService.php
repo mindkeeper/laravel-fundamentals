@@ -32,19 +32,14 @@ class ResourceService implements ResourceServiceInterface
         return $this->resourceRepository->findById($id);
     }
 
-    public function editById(int $id, Resource $data): Resource
+    public function editById(int $id, Resource $resource): Resource
     {
-        $resource = $this->resourceRepository->findById($id);
-        $resource->fill($data->toArray());
-        $this->resourceRepository->editById($id, $resource);
-
-        return $resource;
+        return $this->resourceRepository->editById($id, $resource);
     }
 
-    public function destroyById(int $id): void
+    public function destroy(Resource $resource): void
     {
-        $this->resourceRepository->destroyById($id);
-
+        $this->resourceRepository->destroy($resource);
     }
 
     public function create(Resource $resource): void

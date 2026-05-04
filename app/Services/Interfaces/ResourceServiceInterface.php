@@ -13,7 +13,7 @@ interface ResourceServiceInterface
 
     public function editById(int $id, Resource $resource): Resource;
 
-    public function destroyById(int $id): void;
+    public function destroy(Resource $resource): void;
 
     public function create(Resource $resource): void;
 }

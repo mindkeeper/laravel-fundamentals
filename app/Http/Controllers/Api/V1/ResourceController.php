@@ -101,9 +101,9 @@ class ResourceController extends Controller
             new OA\Response(response: 404, description: 'Resource not found'),
         ]
     )]
-    public function show(int $id): ResourceResource
+    public function show(Resource $resource): ResourceResource
     {
-        return new ResourceResource($this->resourceService->findById($id));
+        return new ResourceResource($resource);
     }
 
     #[OA\Put(
@@ -131,9 +131,10 @@ class ResourceController extends Controller
             new OA\Response(response: 422, description: 'Validation error'),
         ]
     )]
-    public function update(int $id, UpdateResourceRequest $request): ResourceResource
+    public function update(Resource $resource, UpdateResourceRequest $request): ResourceResource
     {
-        $resource = $this->resourceService->editById($id, new Resource($request->validated()));
+        $resource->fill($request->validated());
+        $this->resourceService->editById($resource->id, $resource);
 
         return new ResourceResource($resource);
     }
@@ -161,14 +162,13 @@ class ResourceController extends Controller
             new OA\Response(response: 404, description: 'Resource not found'),
         ]
     )]
-    public function destroy(int $id, Request $request): JsonResponse
+    public function destroy(Resource $resource, Request $request): JsonResponse
     {
-        $resource = $this->resourceService->findById($id);
         if ($resource->user_id !== $request->user()->id) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
-        $this->resourceService->destroyById($id);
+        $this->resourceService->destroy($resource);
 
         return response()->json([
             'message' => 'success',
