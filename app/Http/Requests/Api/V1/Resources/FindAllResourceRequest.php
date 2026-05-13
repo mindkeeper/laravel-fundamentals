@@ -23,11 +23,11 @@ class FindAllResourceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'per_page'=>['sometimes','integer','min:1','max:100'],
-            'page'=>['sometimes','integer','min:1'],
-            'sort_by'=>['sometimes','in:id,title,created_at,updated_at'],
-            'order'=>['sometimes','in:asc,desc'],
-            'q'=>['sometimes','string'],
+            'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
+            'page' => ['sometimes', 'integer', 'min:1'],
+            'sort_by' => ['sometimes', 'in:id,title,created_at,updated_at'],
+            'order' => ['sometimes', 'in:asc,desc'],
+            'q' => ['sometimes', 'string'],
         ];
     }
 }

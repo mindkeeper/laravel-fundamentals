@@ -17,7 +17,8 @@ class Resource extends Model
         'description',
     ];
 
-    public function user(): BelongsTo{
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 }

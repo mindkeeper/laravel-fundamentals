@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Resource>
+ * @extends Factory<resource>
  */
 class ResourceFactory extends Factory
 {
@@ -20,9 +20,9 @@ class ResourceFactory extends Factory
     {
         return [
             //
-            'user_id'=> User::factory(),
-            'title'=>fake()->word(),
-            'description'=>fake()->paragraph(),
+            'user_id' => User::factory(),
+            'title' => fake()->word(),
+            'description' => fake()->paragraph(),
         ];
     }
 }

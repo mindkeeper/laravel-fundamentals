@@ -22,7 +22,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AuthRepositoryInterface::class, AuthRepository::class);
         $this->app->bind(AuthServiceInterface::class, AuthService::class);
 
-        //resources
+        // resources
         $this->app->bind(ResourceRepositoryInterface::class, ResourceRepository::class);
         $this->app->bind(ResourceServiceInterface::class, ResourceService::class);
     }
