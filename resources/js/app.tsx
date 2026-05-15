@@ -6,6 +6,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { route as routeFn } from 'ziggy-js';
+import { Toaster } from './components/ui/sonner';
 import { initializeTheme } from './hooks/use-appearance';
 import { NuqsAdapter } from './lib/nuqs-adapter';
 declare global {
@@ -24,6 +25,7 @@ createInertiaApp({
             <NuqsAdapter>
                 <QueryClientProvider client={queryClient}>
                     <App {...props} />
+                    <Toaster />
                     <ReactQueryDevtools initialIsOpen={false} />
                 </QueryClientProvider>
             </NuqsAdapter>,

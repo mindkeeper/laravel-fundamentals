@@ -7,7 +7,7 @@ import { useResources } from '@/hooks/api/use-resource';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { type Resource } from '@/types/api/resource';
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Plus, Search } from 'lucide-react';
 import { parseAsInteger, parseAsString, useQueryStates } from 'nuqs';
 import { useCallback, useState } from 'react';
@@ -39,22 +39,24 @@ function ResourceCardSkeleton() {
 
 function ResourceCard({ resource }: { resource: Resource }) {
     return (
-        <Card className="flex flex-col">
-            <CardHeader>
-                <CardTitle className="text-base">{resource.title}</CardTitle>
-                {resource.user && (
-                    <CardDescription>
-                        <Badge variant="secondary">{resource.user}</Badge>
-                    </CardDescription>
-                )}
-            </CardHeader>
-            <CardContent className="flex-1">
-                <p className="text-muted-foreground line-clamp-3 text-sm">{resource.description}</p>
-            </CardContent>
-            <CardFooter>
-                <span className="text-muted-foreground text-xs">{new Date(resource.updated_at).toLocaleDateString()}</span>
-            </CardFooter>
-        </Card>
+        <Link href={route('resources.show', resource.id)}>
+            <Card className="flex flex-col">
+                <CardHeader>
+                    <CardTitle className="text-base">{resource.title}</CardTitle>
+                    {resource.user && (
+                        <CardDescription>
+                            <Badge variant="secondary">{resource.user}</Badge>
+                        </CardDescription>
+                    )}
+                </CardHeader>
+                <CardContent className="flex-1">
+                    <p className="text-muted-foreground line-clamp-3 text-sm">{resource.description}</p>
+                </CardContent>
+                <CardFooter>
+                    <span className="text-muted-foreground text-xs">{new Date(resource.updated_at).toLocaleDateString()}</span>
+                </CardFooter>
+            </Card>
+        </Link>
     );
 }
 

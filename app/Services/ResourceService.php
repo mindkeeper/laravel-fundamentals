@@ -16,7 +16,7 @@ class ResourceService implements ResourceServiceInterface
         private readonly ResourceRepositoryInterface $resourceRepository,
     ) {}
 
-    public function findAll(?int $perPage = 15, ?string $sortBy = null, ?string $order = null, ?string $q = null): LengthAwarePaginator
+    public function findAll(?int $perPage = 15, ?string $sortBy = null, ?string $order = null, ?string $q = null, ?int $userId = null): LengthAwarePaginator
     {
         $allowedSortColumns = ['id', 'title', 'created_at', 'updated_at'];
         $allowedOrders = ['asc', 'desc'];
@@ -24,7 +24,7 @@ class ResourceService implements ResourceServiceInterface
         $sortBy = in_array($sortBy, $allowedSortColumns) ? $sortBy : 'created_at';
         $order = in_array($order, $allowedOrders) ? $order : 'desc';
 
-        return $this->resourceRepository->findAll($perPage, $sortBy, $order, $q);
+        return $this->resourceRepository->findAll($perPage, $sortBy, $order, $q, $userId);
     }
 
     public function findById(int $id): Resource

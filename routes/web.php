@@ -11,9 +11,25 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::prefix('resources')->group(function () {
         Route::get('/', function () {
-            return Inertia::render('resources');
+            return Inertia::render('resources/index');
         })->name('resources');
-        Route::get('/data/list',[ResourceDataController::class, 'index'])->name('resources.data');;
+
+        Route::get('/data/list', [ResourceDataController::class, 'index'])->name('resources.data');
+        Route::get('/data/{resource}', [ResourceDataController::class, 'show'])->name('resources.data.show');
+        Route::put('/data/{resource}', [ResourceDataController::class, 'update'])->name('resources.data.update');
+        Route::delete('/data/{resource}', [ResourceDataController::class, 'destroy'])->name('resources.data.destroy');
+
+        Route::get('/{id}', function ($id) {
+            return Inertia::render('resources/show', [
+                'id' => $id,
+            ]);
+        })->name('resources.show');
+
+        Route::get('/{id}/edit', function ($id) {
+            return Inertia::render('resources/edit', [
+                'id' => $id,
+            ]);
+        })->name('resources.edit');
     });
 });
 

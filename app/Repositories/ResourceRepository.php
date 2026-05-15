@@ -8,9 +8,13 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class ResourceRepository implements ResourceRepositoryInterface
 {
-    public function findAll(int $perPage, string $sortBy, string $order, ?string $q = null): LengthAwarePaginator
+    public function findAll(int $perPage, string $sortBy, string $order, ?string $q = null, ?int $userId = null): LengthAwarePaginator
     {
-        return Resource::with('user')->when($q, fn ($query) => $query->where('title', 'like', "%{$q}%"))->orderBy($sortBy, $order)->paginate($perPage);
+        return Resource::with('user')
+            ->when($userId, fn ($query) => $query->where('user_id', $userId))
+            ->when($q, fn ($query) => $query->where('title', 'like', "%{$q}%"))
+            ->orderBy($sortBy, $order)
+            ->paginate($perPage);
     }
 
     public function findById(int $id): Resource

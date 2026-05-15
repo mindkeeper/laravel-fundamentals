@@ -7,7 +7,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ResourceRepositoryInterface
 {
-    public function findAll(int $perPage, string $sortBy, string $order, ?string $query = null): LengthAwarePaginator;
+    public function findAll(int $perPage, string $sortBy, string $order, ?string $query = null, ?int $userId = null): LengthAwarePaginator;
 
     public function findById(int $id): Resource;
 
