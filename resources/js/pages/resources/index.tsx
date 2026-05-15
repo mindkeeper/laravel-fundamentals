@@ -109,7 +109,7 @@ export default function ResourcePage() {
                         </Button>
                     </form>
 
-                    <Button>
+                    <Button nativeButton={false} render={<Link href={route('resources.create')} />}>
                         <Plus className="mr-1 h-4 w-4" />
                         New Resource
                     </Button>

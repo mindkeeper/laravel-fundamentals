@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Resources\CreateResourceRequest;
+use App\Http\Requests\Api\V1\Resources\DeleteResourceRequest;
 use App\Http\Requests\Api\V1\Resources\FindAllResourceRequest;
 use App\Http\Requests\Api\V1\Resources\UpdateResourceRequest;
 use App\Http\Resources\Api\V1\ResourceResource;
 use App\Models\Resource;
 use App\Services\Interfaces\ResourceServiceInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use OpenApi\Attributes as OA;
 
@@ -162,12 +162,8 @@ class ResourceController extends Controller
             new OA\Response(response: 404, description: 'Resource not found'),
         ]
     )]
-    public function destroy(Resource $resource, Request $request): JsonResponse
+    public function destroy(Resource $resource, DeleteResourceRequest $request): JsonResponse
     {
-        if ($resource->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
-
         $this->resourceService->destroy($resource);
 
         return response()->json([

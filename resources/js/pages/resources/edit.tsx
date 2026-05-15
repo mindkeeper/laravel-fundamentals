@@ -3,13 +3,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Textarea } from '@/components/ui/textarea';
-import { useResource, useUpdateResource } from '@/hooks/api/use-resource';
+import { useResource } from '@/hooks/api/use-resource';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Resources', href: '/resources' },
@@ -47,34 +46,22 @@ interface Props {
 
 export default function ResourceEdit({ id }: Props) {
     const { data, isLoading, isError } = useResource(id);
-    const { mutate, isPending, error } = useUpdateResource(id);
     const resource = data?.data;
 
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const { data: formData, setData, put, processing, errors } = useForm({
+        title: '',
+        description: '',
+    });
 
     useEffect(() => {
         if (resource) {
-            setTitle(resource.title);
-            setDescription(resource.description);
+            setData({ title: resource.title, description: resource.description });
         }
-    }, [resource]);
-
-    const errors = (error as Record<string, string> | null) ?? {};
+    }, [resource, setData]);
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        mutate(
-            { title, description },
-            {
-                onSuccess: () => router.visit(route('resources.show', id)),
-                onError: (err) => {
-                    if ((err as Error).message === 'forbidden') {
-                        toast.warning('You are not allowed to edit this resource.');
-                    }
-                },
-            },
-        );
+        put(route('resources.data.update', id));
     }
 
     return (
@@ -110,8 +97,8 @@ export default function ResourceEdit({ id }: Props) {
                                     <Label htmlFor="title">Title</Label>
                                     <Input
                                         id="title"
-                                        value={title}
-                                        onChange={(e) => setTitle(e.target.value)}
+                                        value={formData.title}
+                                        onChange={(e) => setData('title', e.target.value)}
                                         placeholder="Resource title"
                                         aria-invalid={!!errors.title}
                                     />
@@ -122,8 +109,8 @@ export default function ResourceEdit({ id }: Props) {
                                     <Label htmlFor="description">Description</Label>
                                     <Textarea
                                         id="description"
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
+                                        value={formData.description}
+                                        onChange={(e) => setData('description', e.target.value)}
                                         placeholder="Resource description"
                                         rows={6}
                                         aria-invalid={!!errors.description}
@@ -132,13 +119,14 @@ export default function ResourceEdit({ id }: Props) {
                                 </div>
 
                                 <div className="flex items-center gap-2">
-                                    <Button type="submit" disabled={isPending}>
-                                        {isPending ? 'Saving...' : 'Save Changes'}
+                                    <Button type="submit" disabled={processing}>
+                                        {processing ? 'Saving...' : 'Save Changes'}
                                     </Button>
                                     <Button
                                         type="button"
                                         variant="outline"
-                                        nativeButton={false} render={<Link href={route('resources.show', id)} />}
+                                        nativeButton={false}
+                                        render={<Link href={route('resources.show', id)} />}
                                     >
                                         Cancel
                                     </Button>

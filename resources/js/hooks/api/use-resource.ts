@@ -103,6 +103,7 @@ export const useUpdateResource = (id: string | number) => {
 
     return useMutation({
         mutationFn: (payload: UpdateResourcePayload) => updateResource(id, payload),
+        throwOnError: false,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['resources'] });
         },

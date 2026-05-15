@@ -15,9 +15,14 @@ Route::middleware(['auth'])->group(function () {
         })->name('resources');
 
         Route::get('/data/list', [ResourceDataController::class, 'index'])->name('resources.data');
+        Route::post('/data', [ResourceDataController::class, 'store'])->name('resources.data.store');
         Route::get('/data/{resource}', [ResourceDataController::class, 'show'])->name('resources.data.show');
         Route::put('/data/{resource}', [ResourceDataController::class, 'update'])->name('resources.data.update');
         Route::delete('/data/{resource}', [ResourceDataController::class, 'destroy'])->name('resources.data.destroy');
+
+        Route::get('/create', function () {
+            return Inertia::render('resources/create');
+        })->name('resources.create');
 
         Route::get('/{id}', function ($id) {
             return Inertia::render('resources/show', [

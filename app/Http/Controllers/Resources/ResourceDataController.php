@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Resources;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Resources\CreateResourceRequest;
+use App\Http\Requests\Resources\DeleteResourceRequest;
+use App\Http\Requests\Resources\UpdateResourceRequest;
 use App\Http\Resources\Api\V1\ResourceResource;
 use App\Models\Resource;
 use App\Services\Interfaces\ResourceServiceInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -29,36 +33,32 @@ class ResourceDataController extends Controller
         return ResourceResource::collection($paginated);
     }
 
+    public function store(CreateResourceRequest $request): RedirectResponse
+    {
+        $resource = new Resource($request->validated());
+        $resource->user_id = $request->user()->id;
+        $this->resourceService->create($resource);
+
+        return redirect()->route('resources.show', $resource->id);
+    }
+
     public function show(Resource $resource): ResourceResource
     {
         return new ResourceResource($resource);
     }
 
-    public function destroy(Request $request, Resource $resource): JsonResponse
+    public function destroy(DeleteResourceRequest $request, Resource $resource): JsonResponse
     {
-        if ($request->user()->id !== $resource->user_id) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
-
         $this->resourceService->destroy($resource);
 
         return response()->json(null, 204);
     }
 
-    public function update(Request $request, Resource $resource): ResourceResource|JsonResponse
+    public function update(UpdateResourceRequest $request, Resource $resource): RedirectResponse
     {
-        if ($request->user()->id !== $resource->user_id) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
-
-        $validated = $request->validate([
-            'title' => ['sometimes', 'string'],
-            'description' => ['sometimes', 'string'],
-        ]);
-
-        $resource->fill($validated);
+        $resource->fill($request->validated());
         $this->resourceService->editById($resource->id, $resource);
 
-        return new ResourceResource($resource);
+        return redirect()->route('resources.show', $resource->id);
     }
 }
