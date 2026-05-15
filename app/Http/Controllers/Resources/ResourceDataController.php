@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Storage;
 
 class ResourceDataController extends Controller
 {
@@ -35,8 +36,12 @@ class ResourceDataController extends Controller
 
     public function store(CreateResourceRequest $request): RedirectResponse
     {
-        $resource = new Resource($request->validated());
+        $resource = new Resource($request->safe()->except('image'));
         $resource->user_id = $request->user()->id;
+
+        if ($request->hasFile('image')) {
+            $resource->image_url = $request->file('image')->store('resources', 'public');
+        }
         $this->resourceService->create($resource);
 
         return redirect()->route('resources.show', $resource->id);
@@ -56,7 +61,15 @@ class ResourceDataController extends Controller
 
     public function update(UpdateResourceRequest $request, Resource $resource): RedirectResponse
     {
-        $resource->fill($request->validated());
+        $resource->fill($request->safe()->except('image'));
+
+        if ($request->hasFile('image')) {
+            if ($resource->image_url) {
+                Storage::disk('public')->delete($resource->image_url);
+            }
+            $resource->image_url = $request->file('image')->store('resources', 'public');
+        }
+
         $this->resourceService->editById($resource->id, $resource);
 
         return redirect()->route('resources.show', $resource->id);

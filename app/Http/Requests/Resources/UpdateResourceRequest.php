@@ -23,6 +23,7 @@ class UpdateResourceRequest extends FormRequest
         return [
             'title' => ['required', 'string'],
             'description' => ['required', 'string'],
+            'image' => ['sometimes', 'image', 'max:2048'],
         ];
     }
 }

@@ -6,6 +6,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Resources', href: '/resources' },
@@ -13,14 +14,49 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function ResourceCreate() {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, setError, clearErrors } = useForm<{
+        title: string;
+        description: string;
+        image: File | null;
+    }>({
         title: '',
         description: '',
+        image: null,
     });
+
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (previewUrl) URL.revokeObjectURL(previewUrl);
+        };
+    }, [previewUrl]);
+
+    function handleImageChange(file: File | null) {
+        setData('image', file);
+
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+
+        if (file && !file.type.startsWith('image/')) {
+            setPreviewUrl(null);
+            setError('image', 'The image must be a file of type: jpg, jpeg, png, gif, webp.');
+        } else if (file && file.size > 2 * 1024 * 1024) {
+            setPreviewUrl(null);
+            setError('image', 'The image must not be greater than 2MB.');
+        } else {
+            setPreviewUrl(file ? URL.createObjectURL(file) : null);
+            clearErrors('image');
+        }
+    }
 
     function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        post(route('resources.data.store'));
+
+        if (errors.image) {
+            return;
+        }
+
+        post(route('resources.data.store'), { forceFormData: true });
     }
 
     return (
@@ -62,6 +98,24 @@ export default function ResourceCreate() {
                                 aria-invalid={!!errors.description}
                             />
                             {errors.description && <p className="text-destructive text-sm">{errors.description}</p>}
+                        </div>
+
+                        <div className="flex flex-col gap-1.5">
+                            <Label htmlFor="image">Image</Label>
+                            {previewUrl && (
+                                <div className="aspect-square w-40 overflow-hidden rounded-lg">
+                                    <img src={previewUrl} alt="New image preview" className="h-full w-full object-cover" />
+                                </div>
+                            )}
+                            <Input
+                                id="image"
+                                type="file"
+                                accept="image/*"
+                                onChange={(e) => handleImageChange(e.target.files?.[0] ?? null)}
+                                aria-invalid={!!errors.image}
+                            />
+                            <p className="text-muted-foreground text-xs">Optional. Max 2MB.</p>
+                            {errors.image && <p className="text-destructive text-sm">{errors.image}</p>}
                         </div>
 
                         <div className="flex items-center gap-2">

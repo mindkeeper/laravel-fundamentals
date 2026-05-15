@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api\V1;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 use OpenApi\Attributes as OA;
 
 #[OA\Schema(
@@ -30,6 +31,7 @@ class ResourceResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'image_url' => $this->image_url ? Storage::disk('public')->url($this->image_url) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'user' => $this->whenLoaded('user', fn () => $this->user->name),

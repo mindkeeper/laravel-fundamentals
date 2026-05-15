@@ -5,6 +5,7 @@ export interface Resource {
     title: string;
     description: string;
     user: string | null;
+    image_url: string | null;
     crated_at: string;
     updated_at: string;
 }

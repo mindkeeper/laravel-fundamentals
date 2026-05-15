@@ -11,7 +11,6 @@ import { ArrowLeft, Calendar, Pencil, Trash2, User } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Resources', href: '/resources' },
     { title: 'Detail', href: '#' },
@@ -116,7 +115,7 @@ export default function ResourceShow({ id }: Props) {
                         </Dialog>
 
                         {/* Content card */}
-                        <div className="rounded-xl border bg-card p-8 shadow-sm">
+                        <div className="bg-card rounded-xl border p-8 shadow-sm">
                             <div className="mb-2 flex flex-wrap items-start justify-between gap-4">
                                 <h1 className="text-2xl font-bold tracking-tight">{resource.title}</h1>
                             </div>
@@ -139,7 +138,11 @@ export default function ResourceShow({ id }: Props) {
                             </div>
 
                             <Separator className="mb-6" />
-
+                            {resource.image_url && (
+                                <div className="mb-6 aspect-square w-64 overflow-hidden rounded-lg">
+                                    <img src={resource.image_url} alt={resource.title} className="h-full w-full object-cover" />
+                                </div>
+                            )}
                             <p className="text-foreground/80 leading-7 whitespace-pre-line">{resource.description}</p>
                         </div>
                     </>
